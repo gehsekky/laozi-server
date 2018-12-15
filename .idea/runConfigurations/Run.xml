@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.iamchung.laozi.LaoziServerApplication" />
+    <module name="laozi-server" />
+    <option name="PROGRAM_PARAMETERS" value="server configs/dev.yaml" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

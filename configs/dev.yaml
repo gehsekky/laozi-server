@@ -1,0 +1,11 @@
+port: 7000
+document_root: "C:\\Users\\andy\\Documents\\projects\\thehardwareproject.org\\files"
+
+logging:
+  level: INFO
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  user: dev
+  password: dev
+  url: jdbc:mysql://localhost:3306/laozi_server?useSSL=false
