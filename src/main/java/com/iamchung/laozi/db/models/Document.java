@@ -1,30 +1,33 @@
 package com.iamchung.laozi.db.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.joda.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.joda.ser.LocalDateTimeSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "document")
 @Produces(MediaType.APPLICATION_JSON)
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Document.findAllByTags", query = "select d.* from document d join document_tag dt on d.document_id = dt.document_id where dt.tag_id in :tagIds", resultClass = Document.class)
+})
 public class Document {
-
     @Id
     @Column(name = "document_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,6 +80,13 @@ public class Document {
 
     public int getUpdatedBy() {
         return updatedBy;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "document")
+    private List<DocumentTag> documentTags;
+
+    public List<DocumentTag> getDocumentTags() {
+        return documentTags;
     }
 
     public Document() {

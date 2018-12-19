@@ -66,7 +66,7 @@ public class AdminResource {
             this.tags = new ArrayList<>();
 
             // scan directory
-            walkFileTree(this.laoziServerConfiguration.getDocumentRoot(), new ArrayList<>());
+            walkFileTree(this.laoziServerConfiguration.getDocumentRoot(), new ArrayList<>(), true);
             GenericMessage genericMessage = ImmutableGenericMessage.builder()
                     .message("initializing scan")
                     .build();
@@ -84,7 +84,7 @@ public class AdminResource {
      * @param currentTags
      * @throws Exception
      */
-    private void walkFileTree(String rootPath, List<Tag> currentTags) throws Exception {
+    private void walkFileTree(String rootPath, List<Tag> currentTags, boolean isRoot) throws Exception {
         DirectoryStream directoryStream = Files.newDirectoryStream(Paths.get(rootPath));
         directoryStream.forEach(streamPath -> {
             String path = streamPath.toString();
@@ -92,16 +92,20 @@ public class AdminResource {
             // check if path is dir
             if (Files.isDirectory(Paths.get(path))) {
                 // make tag
+                Tag tag = null;
                 if (!tags.contains(name)) {
-                    Tag tag = new Tag(name, LocalDateTime.now(), LocalDateTime.now(), 1, 1);
+                    tag = new Tag(name, LocalDateTime.now(), LocalDateTime.now(), 1, 1);
                     tag.setTagId(tagDao.create(tag));
                     tags.add(name);
-                    currentTags.add(tag);
+
                 }
+
+                if  (isRoot)  currentTags.clear();
+                currentTags.add(tag);
 
                 // recurse
                 try {
-                    walkFileTree(path, currentTags);
+                    walkFileTree(path, currentTags, false);
                 } catch (Exception e) {
                     LOGGER.error("Something went wrong during tree walk", e);
                 }

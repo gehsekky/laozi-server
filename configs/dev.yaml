@@ -1,4 +1,11 @@
-port: 7000
+server:
+  applicationConnectors:
+    - type: http
+      port: 1337
+  adminConnectors:
+    - type: http
+      port: 1338
+
 document_root: "C:\\Users\\andy\\Documents\\projects\\thehardwareproject.org\\files"
 
 logging:
